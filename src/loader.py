@@ -53,6 +53,7 @@ def load_courses(path="data/course.json"):
         raise  ValueError("Course not in file")
     return courses
 
+
 courses = load_courses()
 print(f"Loaded {len(courses)} courses")
 for c in courses:
