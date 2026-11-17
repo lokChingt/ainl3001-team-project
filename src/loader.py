@@ -54,7 +54,8 @@ def load_courses(path="data/course.json"):
     return courses
 
 
-courses = load_courses()
-print(f"Loaded {len(courses)} courses")
-for c in courses:
-    print(c["name"], c["hard"], c["soft"])
+if __name__ == "__main__":
+    courses = load_courses()
+    print(f"Loaded {len(courses)} courses")
+    for c in courses:
+        print(c["name"], c["hard"], c["soft"])
