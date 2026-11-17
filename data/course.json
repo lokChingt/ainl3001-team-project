@@ -6,7 +6,7 @@
         {"name": "Geography", "hard": {"credits_above": 35, "requires": []}, "soft": {"fav_subject": "geography", "career_goal": "environment"}},
         {"name": "English", "hard": {"credits_above": 50, "requires": []}, "soft": {"fav_subject": "languages", "career_goal": "writing"}},
         {"name": "Data Science", "hard": {"credits_above": 45, "requires":["passed_math"]}, "soft": {"fav_subject": "computing", "career_goal": "research"}},
-        {"name": "Biology", "hard": {"credits_above": 40, "requires": ["passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "health"}},
+        {"name": "Biology", "hard": {"credits_above": 40, "requires": ["passed_science"]}, "soft": {"fav_subject": "geography", "career_goal": "health"}},
         {"name": "Chemistry", "hard": {"credits_above": 45, "requires": ["passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
         {"name": "Business", "hard": {"credits_above": 40, "requires": []}, "soft": {"fav_subject": "business", "career_goal": "business"}},
         {"name": "Psychology", "hard": {"credits_above": 35, "requires": []}, "soft": {"fav_subject": "psychology", "career_goal": "health"}},
