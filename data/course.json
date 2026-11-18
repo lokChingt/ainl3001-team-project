@@ -1,16 +1,16 @@
 {
     "courses":[
-        {"name": "Engineering", "hard":{"credits_above": 50, "requires": []}, "soft": {"fav_subject": "maths", "career_goal": "software"}},
-        {"name": "Computer Science", "hard": {"credits_above": 40, "requires": ["passed_math"]}, "soft": {"fav_subject": "computing", "career_goal": "software"}},
-        {"name": "Physics", "hard": {"credits_above": 45, "requires":["passed_math"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
-        {"name": "Geography", "hard": {"credits_above": 35, "requires": []}, "soft": {"fav_subject": "geography", "career_goal": "environment"}},
-        {"name": "English", "hard": {"credits_above": 50, "requires": []}, "soft": {"fav_subject": "languages", "career_goal": "writing"}},
-        {"name": "Data Science", "hard": {"credits_above": 45, "requires":["passed_math"]}, "soft": {"fav_subject": "computing", "career_goal": "research"}},
-        {"name": "Biology", "hard": {"credits_above": 40, "requires": ["passed_science"]}, "soft": {"fav_subject": "geography", "career_goal": "health"}},
-        {"name": "Chemistry", "hard": {"credits_above": 45, "requires": ["passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
-        {"name": "Business", "hard": {"credits_above": 40, "requires": []}, "soft": {"fav_subject": "business", "career_goal": "business"}},
-        {"name": "Psychology", "hard": {"credits_above": 35, "requires": []}, "soft": {"fav_subject": "psychology", "career_goal": "health"}},
-        {"name": "Medicine", "hard":{"credits_above": 55, "requires": ["passed_math", "passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "health"}},
-        {"name": "Law", "hard": {"credits_above": 50, "requires": []}, "soft": {"fav_subject": "languages", "career_goal":"law"}}
+        {"name": "Engineering", "hard":{"min_credits": 50, "requires": []}, "soft": {"fav_subject": "maths", "career_goal": "software"}},
+        {"name": "Computer Science", "hard": {"min_credits": 40, "requires": ["passed_math"]}, "soft": {"fav_subject": "computing", "career_goal": "software"}},
+        {"name": "Physics", "hard": {"min_credits": 45, "requires":["passed_math"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
+        {"name": "Geography", "hard": {"min_credits": 35, "requires": []}, "soft": {"fav_subject": "geography", "career_goal": "environment"}},
+        {"name": "English", "hard": {"min_credits": 50, "requires": []}, "soft": {"fav_subject": "languages", "career_goal": "writing"}},
+        {"name": "Data Science", "hard": {"min_credits": 45, "requires":["passed_math"]}, "soft": {"fav_subject": "computing", "career_goal": "research"}},
+        {"name": "Biology", "hard": {"min_credits": 40, "requires": ["passed_science"]}, "soft": {"fav_subject": "geography", "career_goal": "health"}},
+        {"name": "Chemistry", "hard": {"min_credits": 45, "requires": ["passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
+        {"name": "Business", "hard": {"min_credits": 40, "requires": []}, "soft": {"fav_subject": "business", "career_goal": "business"}},
+        {"name": "Psychology", "hard": {"min_credits": 35, "requires": []}, "soft": {"fav_subject": "psychology", "career_goal": "health"}},
+        {"name": "Medicine", "hard":{"min_credits": 55, "requires": ["passed_math", "passed_science"]}, "soft": {"fav_subject": "science", "career_goal": "health"}},
+        {"name": "Law", "hard": {"min_credits": 50, "requires": []}, "soft": {"fav_subject": "languages", "career_goal":"law"}}
     ]
 }

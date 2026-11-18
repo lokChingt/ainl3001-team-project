@@ -30,7 +30,7 @@ def load_courses(path="data/course.json"):
         hard = c.get("hard", {})
         soft = c.get("soft", {})
 
-        if not isinstance(hard.get("credits_above"), int) or hard["credits_above"] < 0:
+        if not isinstance(hard.get("min_credits"), int) or hard["min_credits"] < 0:
             raise ValueError(f"{name}: 'credits_above' must be an non-negative number")
 
         unknown = set(hard.get("requires", [])) - FACT_NAMES
@@ -45,7 +45,7 @@ def load_courses(path="data/course.json"):
 
         courses.append({
             "name": name,
-            "hard": {"credits_above": hard["credits_above"], "requires": list(hard.get("requires", []))},
+            "hard": {"min_credits": hard["min_credits"], "requires": list(hard.get("requires", []))},
             "soft": {"fav_subject": soft["fav_subject"].strip().lower(), "career_goal": soft["career_goal"].strip().lower()}
         })
 
