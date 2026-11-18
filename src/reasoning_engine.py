@@ -9,7 +9,7 @@ def check_eligible(student, course):
 
     # check credits
     if student["credits"] < course["credits_above"]:
-        reasons.append(f"Insufficient credits: {course["credits_above"]} credits required")
+        reasons.append(f"Insufficient credits: {student['credits']} < {course['credits_above']} required")
 
     # check required subjects
     missing_subjects = set(course["requires"]) - set(student["passed"])
@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
     results = forward_chaining(temp_facts, courses)
     for res in results:
-        print(res["Name"], res["Eligible"], res["Reasons"])
+        print(res["name"], res["eligible"], res["reasons"])
 
