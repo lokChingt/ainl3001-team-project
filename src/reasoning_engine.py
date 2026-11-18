@@ -8,8 +8,8 @@ def check_eligible(student, course):
     reasons = []
 
     # check credits
-    if student["credits"] < course["credits_above"]:
-        reasons.append(f"Insufficient credits: {student['credits']} < {course['credits_above']} required")
+    if student["credits"] < course["min_credits"]:
+        reasons.append(f"Insufficient credits: {student['credits']} < {course['min_credits']} required")
 
     # check required subjects
     missing_subjects = set(course["requires"]) - set(student["passed"])
@@ -35,7 +35,7 @@ def forward_chaining(known_facts, courses):
     results = []
 
     # student facts about hard requirements
-    stu_hard = {"credits": temp_facts["credits"],
+    stu_hard = {"credits": known_facts["credits"],
                 "passed": []}
 
     for key in ("passed_math", "passed_science"):
@@ -70,7 +70,43 @@ def forward_chaining(known_facts, courses):
 
     return results
 
+def calculate_score(perf_match):
+    """
+    input: perf_match: dictionary of perferenced in boolean
+    return: score: int
+    """
 
+    score = 0
+    
+    if perf_match["fav_subject"]:
+        score += 2
+    
+    if perf_match["career_goal"]:
+        score += 1
+
+    return score
+
+
+def rank_courses(results):
+    """
+    input: results: list of course dictionary)
+    return: ranked_course: list of eligible course dictionary
+    """
+
+    eligible_courses = [course for course in results if course["eligible"]]
+
+    # calculate scores
+    for course in eligible_courses:
+        course["score"] = calculate_score(course["perf_match"])
+
+    # sort by score
+    ranked_courses = sorted(eligible_courses, key=lambda course: (-course["score"], course["name"]))
+
+    # add ranking
+    for i, course in enumerate(ranked_courses):
+        course["rank"] = i + 1
+
+    return ranked_courses
 
 
 if __name__ == "__main__":
@@ -87,6 +123,10 @@ if __name__ == "__main__":
 
 
     results = forward_chaining(temp_facts, courses)
-    for res in results:
-        print(res["name"], res["eligible"], res["reasons"])
+
+    # ranking
+    ranked_courses = rank_courses(results)
+
+    for course in ranked_courses:
+        print(course["name"], course["score"], course["rank"], course["reasons"])
 
