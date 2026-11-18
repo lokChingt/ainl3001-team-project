@@ -97,10 +97,10 @@ def rank_courses(results):
 
     # calculate scores
     for course in eligible_courses:
-        course["score"] = calculate_score(course["perf_match"])
+        course["match_score"] = calculate_score(course["perf_match"])
 
     # sort by score
-    ranked_courses = sorted(eligible_courses, key=lambda course: (-course["score"], course["name"]))
+    ranked_courses = sorted(eligible_courses, key=lambda course: (-course["match_score"], course["name"]))
 
     # add ranking
     for i, course in enumerate(ranked_courses):
@@ -127,6 +127,17 @@ if __name__ == "__main__":
     # ranking
     ranked_courses = rank_courses(results)
 
+    # display
+    print(f"{'Rank':<3} | {'Course Name':<15} | {'Score':<5} | {'Explanation'}")
+    print("-" * 80)
+
     for course in ranked_courses:
-        print(course["name"], course["score"], course["rank"], course["reasons"])
+        reasons = ", ".join(course["reasons"])
+
+        print(
+        f"{course['rank']:<6}"
+        f"{course['name']:<20}"
+        f"{course['match_score']:<7}"
+        f"{reasons}"
+    )
 
