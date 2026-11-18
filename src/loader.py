@@ -31,7 +31,7 @@ def load_courses(path="data/course.json"):
         soft = c.get("soft", {})
 
         if not isinstance(hard.get("min_credits"), int) or hard["min_credits"] < 0:
-            raise ValueError(f"{name}: 'credits_above' must be an non-negative number")
+            raise ValueError(f"{name}: 'min_credits' must be an non-negative number")
 
         unknown = set(hard.get("requires", [])) - FACT_NAMES
 
