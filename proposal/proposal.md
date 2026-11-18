@@ -17,7 +17,7 @@ Core Techinque is **Rule-Based Reasoning**. The system has set of course require
 
 **Forward Chaining:** used to check student's eligiblity for the course 
 
-    e.g. If credits > 40 and passed_math=True Then eligible(Computer Science)
+    e.g. If credits >= 40 and passed_math=True Then eligible(Computer Science)
 
 **Rule-based Scoring:** after filtering eligible course use students preferences as scores +2 if matches with their fav_subject and +1 if it meets their carrer goal.
 
