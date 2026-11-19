@@ -25,6 +25,8 @@ Core Techinque is **Knowledge-Based Reasoning**.
 **Forward Chaining:** uses facts from student facts and rules from course file.
 e.g. credits >= 40 AND passed_math -> eligible(Computer Science), the eligible(c) And subject_match(c) And career_match(c) -> strongly_recomend(c). It returns a result and a reason for each course.
 
+**Backward Chaining:** helps answer questions of "what I need to get Physics?" it starts from goal of eligible(Physics) and search the rule for unmet condition giving a gap bewteen each ineligible course.
+
 **Rule-based Scoring:** rules are the main factor of decideing course but ties are broken with prefernces.
 
 
