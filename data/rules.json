@@ -1,0 +1,51 @@
+[
+    {
+        "id": "R1",
+        "conditions": [
+            "credits_sufficient:{course_id}",
+            "required_subjects_met:{course_id}"
+        ],
+        "conclusion": "eligible:{course_id}"
+    },
+    {
+        "id": "R2",
+        "conditions": [
+            "eligible:{course_id}",
+            "fav_subject_match:{course_id}"
+        ],
+        "conclusion": "subject_preference_matched:{course_id}"
+    },
+    {
+        "id": "R3",
+        "conditions": [
+            "eligible:{course_id}",
+            "career_goal_match:{course_id}"
+        ],
+        "conclusion": "career_preference_matched:{course_id}"
+    },
+    {
+        "id": "R4",
+        "conditions": [
+            "eligible:{course_id}",
+            "subject_preference_matched:{course_id}"
+        ],
+        "conclusion": "recommended:{course_id}"
+    },
+    {
+        "id": "R5",
+        "conditions": [
+            "eligible:{course_id}",
+            "career_preference_matched:{course_id}"
+        ],
+        "conclusion": "recommended:{course_id}"
+    },
+    {
+        "id": "R6",
+        "conditions": [
+            "eligible:{course_id}",
+            "subject_preference_matched:{course_id}",
+            "career_preference_matched:{course_id}"
+        ],
+        "conclusion": "strong_recommendation:{course_id}"
+    }
+]
