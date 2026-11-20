@@ -3,7 +3,7 @@ from pathlib import Path
 
 DEFAULT_PATH = Path(__file__).resolve().parent.parent/ "data"/ "course.json"
 
-FACT_NAMES = {"passed_math", "passed_science"}
+FACT_NAMES = {"math", "science"}
 
 def load_courses(path=DEFAULT_PATH):
     """Read file and validate the data types and return a list of coursrs dictionaries"""
