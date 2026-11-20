@@ -16,7 +16,8 @@ def load_courses(path=DEFAULT_PATH):
     except json.JSONDecodeError as e:
         raise ValueError(f"Rules file not valid JSON: {e}")
     courses = []
-    seen = set()
+    seen_names = set()
+    seen_ids = set()
 
     for c in raw.get("courses", []):
         name = c.get("name")
@@ -24,10 +25,18 @@ def load_courses(path=DEFAULT_PATH):
         if not name:
             raise ValueError("A couse is missing the 'name'")
 
-        if name in seen:
+        if name in seen_names:
             raise ValueError(f"Duplicate course: {name}")
         
-        seen.add(name)
+        seen_names.add(name)
+
+        course_id = c.get("_id")
+        if not isinstance(course_id, str) or not course_id.strip():
+            raise ValueError(f"{name}: '_id' is missing")
+        course_id = course_id.strip()
+        if course_id in seen_ids:
+            raise ValueError(f"{name} is duplicate _id")
+        seen_ids.add(course_id)
 
         hard = c.get("hard", {})
         soft = c.get("soft", {})
@@ -46,6 +55,7 @@ def load_courses(path=DEFAULT_PATH):
 
 
         courses.append({
+            "_id": course_id,
             "name": name,
             "hard": {"min_credits": hard["min_credits"], "requires": list(hard.get("requires", []))},
             "soft": {"fav_subject": soft["fav_subject"].strip().lower(), "career_goal": soft["career_goal"].strip().lower()}
@@ -60,4 +70,4 @@ if __name__ == "__main__":
     courses = load_courses()
     print(f"Loaded {len(courses)} courses")
     for c in courses:
-        print(c["name"], c["hard"], c["soft"])
+        print(c["_id"],c["name"], c["hard"], c["soft"])
