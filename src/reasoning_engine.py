@@ -71,41 +71,137 @@ def forward_chaining(known_facts, rules):
     return inferred_facts, triggered_rules
 
 
-def calculate_score(perf_match):
+def calculate_score(triggered_rules, all_rules):
     """
-    input: perf_match: dictionary of perferenced in boolean
+    input:
+        triggered_rules: list of dictionary
+        all_rules: list of dictionary
     return: score: int
     """
 
     score = 0
-    
-    if perf_match["fav_subject"]:
-        score += 2
-    
-    if perf_match["career_goal"]:
-        score += 1
+
+    # get score from each rules
+    rule_scores = {
+        rule["id"]: rule.get("score", 0)
+        for rule in all_rules
+    }
+
+    # calculate score based on triggered rules
+    for rule in triggered_rules:
+        rule_id = rule["rule_id"]
+        score += rule_scores.get(rule_id, 0)
 
     return score
 
 
 def rank_courses(results):
     """
-    input: results: list of course dictionary)
-    return: ranked_course: list of eligible course dictionary
+    input: results: list of course dictionary
+    return: 
+        ranked_courses: list of eligible course dictionary
+        ineligible_courses: list of ineligible course dictionary
     """
 
-    eligible_courses = [course for course in results if course["eligible"]]
-
-    # calculate scores
-    for course in eligible_courses:
-        course["match_score"] = calculate_score(course["perf_match"])
+    eligible_courses = [course for course in results if course["is_eligible"]]
+    ineligible_courses = [course for course in results if not course["is_eligible"]]
 
     # sort by score
-    ranked_courses = sorted(eligible_courses, key=lambda course: (-course["match_score"], course["name"]))
+    ranked_courses = sorted(eligible_courses, key=lambda course: (-course["score"], course["name"]))
 
     # add ranking
-    for i, course in enumerate(ranked_courses):
-        course["rank"] = i + 1
+    for rank, course in enumerate(ranked_courses, start=1):
+        course["rank"] = rank
+
+    return ranked_courses, ineligible_courses
+
+
+def get_course_reasons(triggered_rules):
+    reasons = set()
+
+    # get reason for each applied rules
+    for rule in triggered_rules:
+        rule_id = rule["rule_id"]
+
+        match rule_id:
+            case "R1":
+                reason = "Meet all requirements"
+            case "R2":
+                reason = "Match subject perference"
+            case "R3":
+                reason = "Match career goal"
+
+        reasons.add(reason)
+
+    return reasons
+
+
+def get_ineligible_reasons(student, course):
+    reasons = []
+
+    required_credits = course["hard"]["min_credits"]
+
+    # check if insufficient credits
+    if student["credits"] < required_credits:
+        reasons.append(f"Insufficient credits: {student['credits']} completed, {required_credits} required")
+
+
+    passed_subjects = set(student.get("passed_subjects", []))
+    required_subjects = set(course["hard"]["requires"])
+
+    missing_subjects = required_subjects - passed_subjects
+
+    # check if missing subjects
+    if missing_subjects:
+        subjects = ", ".join(missing_subjects)
+        reasons.append(f"Missing subjects {subjects}")
+
+    return reasons
+
+
+def evaluate_courses(known_facts, courses, all_rules):
+    """
+    input:
+        known_facts: dictionary
+        courses: list of dictionary
+        all_rules: list of dictionary
+    return:
+        ranked_courses: list of dictionary
+        ineligible_courses: list of dictionary
+    """
+
+    results = []
+
+    for course in courses:
+        # build initial facts + course rules
+        initial_facts = build_initial_facts(known_facts, course)
+        rules = get_course_rules(all_rules, course["_id"])
+
+        # forward chaining
+        inferred_facts, triggered_rules = forward_chaining(initial_facts, rules)
+
+        # check if eligible
+        is_eligible = (f"eligible:{course["_id"]}" in inferred_facts)
+
+        # calculate score + get reasons
+        if is_eligible:
+            score = calculate_score(triggered_rules, all_rules)
+            reasons = get_course_reasons(triggered_rules)
+        else:
+            score = 0
+            reasons = get_ineligible_reasons(known_facts, course)
+
+        # store each course result
+        results.append({
+            "id": course["_id"],
+            "name": course["name"],
+            "is_eligible": is_eligible,
+            "score": score,
+            "reasons": reasons
+        })
+
+    # rank courses
+    ranked_courses = rank_courses(results)
 
     return ranked_courses
 
@@ -122,11 +218,34 @@ if __name__ == "__main__":
         "career_goal": "software"
     }
 
-    for course in courses:
-        known_facts = build_initial_facts(temp_facts, course)
+    all_rules = load_rules()
 
-        all_rules = load_rules()
-        rules = get_course_rules(all_rules, course["_id"])
+    ranked_courses, ineligible_courses = evaluate_courses(temp_facts, courses, all_rules)
 
-        inferred_facts, triggered_rules = forward_chaining(known_facts, rules)
-        print(inferred_facts)
+    # display Recommended Courses
+    print("\n--------- Recommended Courses ----------")
+    print(f"\n{'Rank':<3} | {'Course Name':<15} | {'Score':<5} | {'Explanation'}")
+    print("-" * 100)
+
+    for course in ranked_courses:
+        reasons = ", ".join(course["reasons"])
+
+        print(
+            f"{course['rank']:<6}"
+            f"{course['name']:<20}"
+            f"{course['score']:<7}"
+            f"{reasons}"
+        )
+
+    # display Ineligible Courses
+    print("\n--------- Ineligible Courses ----------")
+    print(f"\n{'Course Name':<15} | {'Explanation'}")
+    print("-" * 70)
+
+    for course in ineligible_courses:
+        reasons = ", ".join(course["reasons"])
+        
+        print(
+            f"{course['name']:<17}"
+            f"{reasons}"
+        )

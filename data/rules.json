@@ -13,7 +13,8 @@
             "eligible:{course_id}",
             "fav_subject_match:{course_id}"
         ],
-        "conclusion": "subject_preference_matched:{course_id}"
+        "conclusion": "subject_preference_matched:{course_id}",
+        "score": 2
     },
     {
         "id": "R3",
@@ -21,7 +22,8 @@
             "eligible:{course_id}",
             "career_goal_match:{course_id}"
         ],
-        "conclusion": "career_preference_matched:{course_id}"
+        "conclusion": "career_preference_matched:{course_id}",
+        "score": 1
     },
     {
         "id": "R4",
