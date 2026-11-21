@@ -1,74 +1,75 @@
 from loader import load_courses
+from knowledge_base import load_rules, get_course_rules
 
-def check_eligible(student, course):
-    # return each course
-        # eligible: bool, 
-        # reasons: list[]
+def build_initial_facts(known_facts, course):
+    course_id = course["_id"]
 
-    reasons = []
+    facts = set()
 
-    # check credits
-    if student["credits"] < course["min_credits"]:
-        reasons.append(f"Insufficient credits: {student['credits']} < {course['min_credits']} required")
+    # check hard requirement (credits, passed subjects)
+    if known_facts["credits"] >= course["hard"]["min_credits"]:
+        facts.add(f"credits_sufficient:{course_id}")
 
-    # check required subjects
-    missing_subjects = set(course["requires"]) - set(student["passed"])
+    passed_subjects = set(known_facts.get("passed_subjects", []))
+    required_subjects = set(course["hard"]["requires"])
 
-    if missing_subjects:
-        reasons.append(f"Missing required subject(s): {missing_subjects}")
-
-
-    is_eligible = len(reasons) == 0
-
-    return is_eligible, reasons
-        
+    if required_subjects.issubset(passed_subjects):
+        facts.add(f"required_subjects_met:{course_id}")
 
 
-def forward_chaining(known_facts, courses):
-    # return list of courses dict
-        # name: str, 
-        # is_eligible: bool, 
-        # reasons: list[], 
-        # perference_match: {fav_subj: bool, career_goal: bool}
+    # check soft perference (favourite subject, career goal)
+    stu_fav_subject = known_facts.get("fav_subject")
+    course_fav_subject = course["soft"].get("fav_subject")
 
-    soft_key = ["fav_subject", "career_goal"]
-    results = []
+    if stu_fav_subject is not None and course_fav_subject is not None:
+        if stu_fav_subject == course_fav_subject:
+            facts.add(f"fav_subject_match:{course_id}")
 
-    # student facts about hard requirements
-    stu_hard = {"credits": known_facts["credits"],
-                "passed": []}
+    stu_career_goal = known_facts.get("career_goal")
+    course_career_goal = course["soft"].get("career_goal")
 
-    for key in ("passed_math", "passed_science"):
-        if known_facts[key] == True:
-            stu_hard["passed"].append(key)
+    if stu_career_goal is not None and course_career_goal is not None:
+            if stu_career_goal == course_career_goal:
+                facts.add(f"career_goal_match:{course_id}")
 
-    # student facts about soft perferences
-    stu_soft = {key: known_facts.get(key) for key in ("fav_subject", "career_goal")}
+    return facts
 
 
-    for course in courses:
-        # check if eligible + return reasons
-        is_eligible, reasons = check_eligible(stu_hard, course["hard"])
+def forward_chaining(known_facts, rules):
+    inferred_facts = set(known_facts)
+    triggered_rules = []
+    triggered_rule_idx = set()
+    changed = True
 
-        # match perferences
-        perf_match = {}
 
-        for key in soft_key:
-            perf_match[key] = stu_soft[key] == course["soft"][key]
+    while changed:
+        changed = False
 
-            # add new reasons
-            if perf_match[key]:
-                reasons.append(f"{key} Matched")
+        for rule in rules:
+            rule_id = rule["id"]
+            conditions = rule["conditions"]
+            conclusion = rule["conclusion"]
 
-        # add result of each course
-        results.append({
-            "name": course["name"],
-            "eligible": is_eligible,
-            "reasons": reasons,
-            "perf_match": perf_match
-        })
+            # check if all conditions are known
+            if all(condition in inferred_facts for condition in conditions):
 
-    return results
+                # prevent duplicate rule triggered
+                if rule_id not in triggered_rule_idx:
+                    triggered_rule_idx.add(rule_id)
+
+                    triggered_rules.append({
+                        "rule_id": rule_id,
+                        "conditions": conditions,
+                        "conclusion": conclusion
+                    })
+
+                # add new fact if not already exist
+                if conclusion not in inferred_facts:
+                    inferred_facts.add(conclusion)
+                    changed = True
+
+    return inferred_facts, triggered_rules
+
 
 def calculate_score(perf_match):
     """
@@ -109,35 +110,23 @@ def rank_courses(results):
     return ranked_courses
 
 
+
 if __name__ == "__main__":
     courses = load_courses()
 
     temp_facts = {
         "name" : "John",
         "credits": 45,
-        "passed_math": True,
-        "passed_science": True,
+        "passed_subjects": ["math", "science"],
         "fav_subject": "computing",
         "career_goal": "software"
     }
 
+    for course in courses:
+        known_facts = build_initial_facts(temp_facts, course)
 
-    results = forward_chaining(temp_facts, courses)
+        all_rules = load_rules()
+        rules = get_course_rules(all_rules, course["_id"])
 
-    # ranking
-    ranked_courses = rank_courses(results)
-
-    # display
-    print(f"{'Rank':<3} | {'Course Name':<15} | {'Score':<5} | {'Explanation'}")
-    print("-" * 80)
-
-    for course in ranked_courses:
-        reasons = ", ".join(course["reasons"])
-
-        print(
-        f"{course['rank']:<6}"
-        f"{course['name']:<20}"
-        f"{course['match_score']:<7}"
-        f"{reasons}"
-    )
-
+        inferred_facts, triggered_rules = forward_chaining(known_facts, rules)
+        print(inferred_facts)
