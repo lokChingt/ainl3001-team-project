@@ -1,5 +1,4 @@
-from loader import load_courses
-from knowledge_base import load_rules, get_course_rules
+from knowledge_base import load_courses, load_rules, get_course_rules
 
 def build_initial_facts(known_facts, course):
     course_id = course["_id"]
