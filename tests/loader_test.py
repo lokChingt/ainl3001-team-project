@@ -7,7 +7,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from loader import load_courses
+from knowledge_base import load_courses
 
 REAL_FILE = ROOT / "data" / "course.json"
 
