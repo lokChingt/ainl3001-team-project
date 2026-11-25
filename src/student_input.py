@@ -72,7 +72,7 @@ def validate_student(raw: dict) -> dict:
 
 
 
-def load_students(path=...) -> list[dict]:
+def load_students(path=DEFAULT_PATH) -> list[dict]:
     """
 
     -Read the JSON file
@@ -81,6 +81,21 @@ def load_students(path=...) -> list[dict]:
     -return the list
 
     """
+
+    path = Path(path)
+    try: 
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+            raise ValueError(f"{path} is not valid JSON: {e}")
+
+    students = [validate_student(s) for s in data.get("students", [])]
+    if not students:
+        raise ValueError(f"{path} has no students")
+
+    names = [s["name"] for s in students]
+    if len(names) != len(set(names)):
+        raise ValueError(f"{path} has duplicate student names")
+    return students
 
 
 
@@ -122,3 +137,11 @@ if __name__ == "__main__":
     for typed in ["math, science", " Math ,SCIENCE ", "", "math,,"]:
         print("OK, parsed:", repr(typed), "->", parse_subjects(typed))
         
+    print("load_students")
+    print("OK, loaded:", len(load_students()), "students")
+    for bad in ["missing.json", "data/course.json"]:
+        try:
+            load_students(bad)
+            print("NOT rejected:", bad)
+        except (ValueError, FileNotFoundError) as e:
+            print("OK, rejected:", e)
