@@ -9,6 +9,32 @@ A rule-based system that recommends a course to a a student.The student enters t
 
 Rules live in data/courses.json separate from code so courses and scoring can change without editing Python.
 
+## AIMA Problem Formulation
+Define the problem -> then solve with general methods from problem definition.
+System is knowledge-based agent uses students facts by keyboard input, reasons over a rule-based knowledge base and then displays recommendations with reasons or explanations
+
+|Component | Defintion in realtion to project|
+| --- | --- |
+| **State** | Set of facts known so far. Only course relevant facts. |
+| **Initial state** | Facts from students details (credits, passed_subjects, fav_subject, carrer_goal). |
+| **Actions** | Apply any rule whose conditions are all present in current state. |
+| **Transition model** | The rule conclusion is added to the state. Facts aren't removed. |odel** | The rule's conclusion is added to the state. Facts are never removed. |
+| **Goal test** | *Forward chaining:* no new facts can be found, so every course has a result. *Backward chaining:* eligible<course_name> is proven for specific course. |
+| **Path cost** | each rule application is cost 1. We don't minimise cost, triggered preference rules ass to score used for ranking. |
+
+### State space
+It is a graph where nodes are sets of facts and edges are rule applications. Forward chaining searches from intial facts to goal whereas backward chaining searches from goal to the known facts.
+
+| Part of AIMA design | Where it is in project |
+| --- | --- |
+| Problem defination (courses, hard requirements, soft preferences, rules) | 'data/' JSON files loaded by 'knowledge_base.py' |
+| Input handling and validation | 'student_input.py' |
+| General method: forward chaining, ranking, scoring | 'reasoning_engine.py' |
+| General method: backward chaining and course check | 'backward_chaining.py' |
+| User interface | 'main.py' |
+
+Rules live in file and not code theres same engine works for multiple courses files if they follow same structure.
+
 ## Install
 Requires Python 3.10+
 
