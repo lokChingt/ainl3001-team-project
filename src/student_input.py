@@ -70,6 +70,17 @@ def validate_student(raw: dict) -> dict:
         "career_goal": prefs["career_goal"]
     }
 
+def parse_typed_student(answers: dict) -> dict:
+    """turn typed student input into clean student"""
+    student = {
+        "name": answers.get("name", ""),
+        "credits": parse_credits(answers.get("credits", "")),
+        "passed_subjects": parse_subjects(answers.get("passed_subjects", "")),
+        "fav_subject": answers.get("fav_subject", ""),
+        "career_goal": answers.get("career_goal", ""),
+    }
+    return validate_student(student)
+
 
 
 def load_students(path=DEFAULT_PATH) -> list[dict]:
@@ -144,4 +155,16 @@ if __name__ == "__main__":
             load_students(bad)
             print("NOT rejected:", bad)
         except (ValueError, FileNotFoundError) as e:
+            print("OK, rejected:", e)
+
+    print("parse_typed_student")
+    print("OK, accepted:", parse_typed_student({"name": " Karla ", "credits": " 67 ",
+          "passed_subjects": "Math, science", "fav_subject": " Computing", "career_goal": "SOFTWARE"}))
+    for bad in [{"name": "Karla", "credits": "eighty", "passed_subjects": "math", "fav_subject": "a", "career_goal": "b"},
+                {"name": "Karla", "credits": "67", "passed_subjects": "math, art", "fav_subject": "a", "career_goal": "b"},
+                {"name": "Karla", "credits": "67", "passed_subjects": "", "fav_subject": "", "career_goal": "b"}]:
+        try:
+            parse_typed_student(bad)
+            print("NOT rejected:", bad)
+        except ValueError as e:
             print("OK, rejected:", e)
