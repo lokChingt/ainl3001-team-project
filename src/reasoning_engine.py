@@ -126,7 +126,7 @@ def get_course_reasons(triggered_rules):
             case "R1":
                 reason = "Meet all requirements"
             case "R2":
-                reason = "Match subject perference"
+                reason = "Match subject preference"
             case "R3":
                 reason = "Match career goal"
             case _:
@@ -155,7 +155,7 @@ def get_ineligible_reasons(student, course):
 
     # check if missing subjects
     if missing_subjects:
-        subjects = ", ".join(missing_subjects)
+        subjects = ", ".join(sorted(missing_subjects))
         reasons.append(f"Missing subjects {subjects}")
 
     return reasons
