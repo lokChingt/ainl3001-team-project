@@ -13,6 +13,14 @@ def parse_credits(text: str) -> int:
     except ValueError:
         raise ValueError(f"Credits must be a whole number like 67, you typed {text!r}")
 
+def parse_subjects(text: str) -> list[str]:
+    """Turn typed 'Math, science' into ['math', 'science'] + empty = no sub passed."""
+    result = []
+    for s in text.split(","):
+        if s.strip():
+            result.append(s.strip().lower())
+    return result
+
 def validate_student(raw: dict) -> dict:
     """
     
@@ -42,7 +50,7 @@ def validate_student(raw: dict) -> dict:
     if not isinstance(subjects, list) or not all(isinstance(s, str) for s in subjects):
         raise ValueError(f"{name}: passed_subjects must be a list of strings, got {subjects!r}")  
 
-    subjects = [s.strip() for s in subjects]
+    subjects = [s.strip().lower() for s in subjects]
     unknown = set(subjects) - FACT_NAMES
     if unknown:
         raise ValueError(f"{name}: passed_subjects has unknown subject(s) {sorted(unknown)}")
@@ -69,21 +77,24 @@ def load_students(path=...) -> list[dict]:
 
 if __name__ == "__main__":
     for bad in ["John", {"name": "X"},
-                {"name": "  ", "credits": 1, "passed_math": True,
-                 "passed_science": True, "fav_subject": "a", "career_goal": "b"},
-                {"name": "X", "credits": "80", "passed_math": True,
-                 "passed_science": True, "fav_subject": "a", "career_goal": "b"},
-                {"name": "X", "credits": -5, "passed_math": True,
-                 "passed_science": True, "fav_subject": "a", "career_goal": "b"},
-                {"name": "X", "credits": True, "passed_math": True,
-                 "passed_science": True, "fav_subject": "a", "career_goal": "b"},
-                {"name": "X", "credits": 1.5, "passed_math": True,
-                 "passed_science": True, "fav_subject": "a", "career_goal": "b"}]:
+                {"name": "  ", "credits": 1, "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": "80", "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": -5, "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": True, "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": 1.5, "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": 50, "passed_subjects": "math", "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": 50, "passed_subjects": [1, 2], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": 50, "passed_subjects": ["maths"], "fav_subject": "a", "career_goal": "b"}]:
         try:
             validate_student(bad)
             print("NOT rejected:", bad)
         except ValueError as e:
             print("OK, rejected:", e)
+
+    good = {"name": "X", "credits": 50, "passed_subjects": [" Math ", "science"],
+            "fav_subject": "a", "career_goal": "b"}
+    validate_student(good)
+    print("OK, accepted:", good["name"])       
 
     print("parse_credits typed input ")
     for typed in ["80", " 67 ", "0"]:
@@ -94,3 +105,8 @@ if __name__ == "__main__":
             print("NOT rejected:", repr(typed))
         except ValueError as e:
             print("OK, rejected:", e)
+
+    print("parse_subjects typed input")
+    for typed in ["math, science", " Math ,SCIENCE ", "", "math,,"]:
+        print("OK, parsed:", repr(typed), "->", parse_subjects(typed))
+        
