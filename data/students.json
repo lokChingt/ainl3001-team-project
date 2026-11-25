@@ -2,81 +2,71 @@
   "students": [
     {
       "name": "John",
-      "credits": 80,
-      "passed_math": true,
-      "passed_science": true,
+      "credits": 67,
+      "passed_subjects": ["math", "science"],
       "fav_subject": "computing",
       "career_goal": "software"
     },
     {
       "name": "Aoife",
       "credits": 62,
-      "passed_math": true,
-      "passed_science": true,
+      "passed_subjects": ["math", "science"],
       "fav_subject": "science",
       "career_goal": "health"
     },
     {
       "name": "Liam",
       "credits": 48,
-      "passed_math": false,
-      "passed_science": false,
+       "passed_subjects": [],
       "fav_subject": "business",
       "career_goal": "business"
     },
     {
       "name": "Sofia",
       "credits": 55,
-      "passed_math": false,
-      "passed_science": true,
+       "passed_subjects": ["science"],
       "fav_subject": "languages",
       "career_goal": "law"
     },
     {
       "name": "Tomas",
       "credits": 46,
-      "passed_math": true,
-      "passed_science": false,
+       "passed_subjects": ["math"],
       "fav_subject": "computing",
       "career_goal": "research"
     },
     {
       "name": "Petr",
       "credits": 40,
-      "passed_math": true,
-      "passed_science": false,
+      "passed_subjects": ["math"],
       "fav_subject": "computing",
       "career_goal": "software"
     },
     {
       "name": "Eva",
       "credits": 35,
-      "passed_math": true,
-      "passed_science": true,
+      "passed_subjects": ["math", "science"],
       "fav_subject": "science",
       "career_goal": "health"
     },
     {
       "name": "Finn",
       "credits": 60,
-      "passed_math": true,
-      "passed_science": true,
+      "passed_subjects": ["math", "science"],
       "fav_subject": "science",
       "career_goal": "research"
     },
     {
       "name": "Grace",
       "credits": 38,
-      "passed_math": false,
-      "passed_science": false,
+       "passed_subjects": [],
       "fav_subject": "computing",
       "career_goal": "research"
     },
     {
       "name": "Hugo",
       "credits": 56,
-      "passed_math": true,
-      "passed_science": false,
+      "passed_subjects": ["math"],
       "fav_subject": "science",
       "career_goal": "health"
     }
