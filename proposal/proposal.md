@@ -8,7 +8,7 @@
 # Problem Description
 **Topic Name:** Intelligent Course Recommedation System
 
-**Why is course selection hard:** Course selection is not just looking at one number.All courses have requirements such as credits needed and specific subjects based on curse that excludes some students. There are also the students personal goals that also effect a decidion between 2 or more courses that may interfer with students wants (e.g. Student wants Maths but doesn't meet credits needed). Students get a yes/no answer with no reason of why or why not they got a course.
+**Why is course selection hard:** Course selection is not just looking at one number.All courses have requirements such as credits needed and specific subjects based on course that excludes some students. There are also the students personal goals that also effect a decision between 2 or more courses that may interfer with students wants (e.g. Student wants Maths but doesn't meet credits needed). Students get a yes/no answer with no reason of why or why not they got a course.
 
 **Problem solving:** Using a students facts the system
 
@@ -27,7 +27,7 @@ e.g. credits >= 40 AND passed_math -> eligible(Computer Science), the eligible(c
 
 **Backward Chaining:** helps answer questions of "what I need to get Physics?" it starts from goal of eligible(Physics) and search the rule for unmet condition giving a gap bewteen each ineligible course.
 
-**Rule-based Scoring:** rules are the main factor of decideing course but ties are broken with prefernces.
+**Rule-based Scoring:** rules are the main factor of deciding course but ties are broken with prefernces.
 
 
 # Knowledge Base
@@ -37,7 +37,7 @@ A JSON file loaded at start of runtime and rules can change without touching cod
 - Elgibilty rules: are hard contraints such as Computer Science >= 40 credits and you need to pass maths.
 
 # System Design
-Input -> KB loader -> Forward chaining -> ranking -> explanation -> output
+Input -> KB loader -> Forward chaining / Backward chaining -> ranking -> explanation -> output
 
 **System Flow Diagram:**
 ![alt text](image.png)
@@ -47,11 +47,13 @@ Input -> KB loader -> Forward chaining -> ranking -> explanation -> output
 
 **Forward Chaining:** Checks course requirements against student facts and returns list of eligible courses.
 
+**Backward Chaining:** Enter a course and checks which rules lead to goal, returns requirements needed and which the student met or did not meet.
+
 **Ranking Courses:** Scores each eligible course and finds best result.
 
 **Explanantion:** print short reason for eligible course and ineligible course
 
-**Output layer:** Print best course at top and list of other courses with either "eligible" or "not elgible".
+**Output layer:** Print best course at top and list of other courses with either "eligible" or "not eligible".
 
 **Testing:** unit test for KB and engine and boundary tests, no eligible course and conflicting perferences.
 

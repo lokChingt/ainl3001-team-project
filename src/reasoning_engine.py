@@ -116,7 +116,7 @@ def rank_courses(results):
 
 
 def get_course_reasons(triggered_rules):
-    reasons = set()
+    reasons = []
 
     # get reason for each applied rules
     for rule in triggered_rules:
@@ -129,8 +129,11 @@ def get_course_reasons(triggered_rules):
                 reason = "Match subject perference"
             case "R3":
                 reason = "Match career goal"
+            case _:
+                continue
 
-        reasons.add(reason)
+        if reason not in reasons:
+            reasons.append(reason)
 
     return reasons
 
