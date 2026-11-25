@@ -1,8 +1,9 @@
 
 import json
 from pathlib import Path
+from knowledge_base import FACT_NAMES
 
-REQUIRED_KEYS = {"name", "credits", "passed_math", "passed_science", "fav_subject", "career_goal"}
+REQUIRED_KEYS = {"name", "credits", "passed_subjects", "fav_subject", "career_goal"}
 DEFAULT_PATH = Path(__file__).parent.parent / "data" / "students.json"
 
 def parse_credits(text: str) -> int:
@@ -36,6 +37,17 @@ def validate_student(raw: dict) -> dict:
     credits = raw["credits"]
     if isinstance(credits, bool) or not isinstance(credits, int) or credits < 0:
         raise ValueError(f"{name}: credits must be a whole number, 0 or more, got {credits!r}")
+
+    subjects = raw["passed_subjects"]
+    if not isinstance(subjects, list) or not all(isinstance(s, str) for s in subjects):
+        raise ValueError(f"{name}: passed_subjects must be a list of strings, got {subjects!r}")  
+
+    subjects = [s.strip() for s in subjects]
+    unknown = set(subjects) - FACT_NAMES
+    if unknown:
+        raise ValueError(f"{name}: passed_subjects has unknown subject(s) {sorted(unknown)}")
+
+
 
 
 
