@@ -39,3 +39,17 @@ def explain_course(course):
         return explain_eligibility(course) 
     return explain_ineligibility(course)
 
+
+if __name__ == "__main__":
+    for course in [
+        {"name": "Computer Science", "is_eligible": True, "score": 3,
+         "reasons": ["Meet all requirements", "Match subject preference", "Match career goal"]},
+        {"name": "Data Science", "is_eligible": True, "score": 2,
+         "reasons": ["Meet all requirements", "Match subject preference"]},
+        {"name": "Geography", "is_eligible": True, "score": 0,
+         "reasons": ["Meet all requirements"]},
+        {"name": "Medicine", "is_eligible": False, "score": 0,
+         "reasons": ["Insufficient credits: 30 completed, 55 required", "Missing subjects science, math"]},
+        {"name": "Test", "is_eligible": False, "score": 0,
+         "reasons": ["Something new"]}]:
+        print(explain_course(course))
