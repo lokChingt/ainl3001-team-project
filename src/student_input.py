@@ -55,9 +55,20 @@ def validate_student(raw: dict) -> dict:
     if unknown:
         raise ValueError(f"{name}: passed_subjects has unknown subject(s) {sorted(unknown)}")
 
+    prefs = {}
+    for key in ["fav_subject", "career_goal"]:
+        value = raw[key]
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{name}: {key} must be a non empty text, got {value!r}")
+        prefs[key] = value.strip().lower()
 
-
-
+    return {
+        "name": name,
+        "credits": credits,
+        "passed_subjects": subjects,
+        "fav_subject": prefs["fav_subject"],
+        "career_goal": prefs["career_goal"]
+    }
 
 
 
@@ -84,17 +95,18 @@ if __name__ == "__main__":
                 {"name": "X", "credits": 1.5, "passed_subjects": ["math", "science"], "fav_subject": "a", "career_goal": "b"},
                 {"name": "X", "credits": 50, "passed_subjects": "math", "fav_subject": "a", "career_goal": "b"},
                 {"name": "X", "credits": 50, "passed_subjects": [1, 2], "fav_subject": "a", "career_goal": "b"},
-                {"name": "X", "credits": 50, "passed_subjects": ["maths"], "fav_subject": "a", "career_goal": "b"}]:
+                {"name": "X", "credits": 50, "passed_subjects": ["maths"], "fav_subject": "a", "career_goal": "b"},
+                {"name": "X", "credits": 50, "passed_subjects": [], "fav_subject": "   ", "career_goal": "b"},
+                {"name": "X", "credits": 50, "passed_subjects": [], "fav_subject": "a", "career_goal": 5}]:
         try:
             validate_student(bad)
             print("NOT rejected:", bad)
         except ValueError as e:
             print("OK, rejected:", e)
 
-    good = {"name": "X", "credits": 50, "passed_subjects": [" Math ", "science"],
-            "fav_subject": "a", "career_goal": "b"}
-    validate_student(good)
-    print("OK, accepted:", good["name"])       
+    good = {"name": "X", "credits": 67, "passed_subjects": [" Math ", "science"],
+            "fav_subject": " Computing ", "career_goal": " SOFTWARE "}
+    print("OK, accepted:", validate_student(good))       
 
     print("parse_credits typed input ")
     for typed in ["80", " 67 ", "0"]:
