@@ -19,13 +19,13 @@ def backward_chaining(goal, known_facts, rules, triggered_rules):
         if all(backward_chaining(c, known_facts,rules, triggered_rules) for c in rule["conditions"]):
             proven = True
 
-        # record rule
-        if rule["id"] not in [r["rule_id"] for r in triggered_rules]:
-            triggered_rules.append({
-                "rule_id": rule["id"],
-                "conditions": rule["conditions"],
-                "conclusion": rule["conclusion"]
-            })
+            # record rule
+            if rule["id"] not in [r["rule_id"] for r in triggered_rules]:
+                triggered_rules.append({
+                    "rule_id": rule["id"],
+                    "conditions": rule["conditions"],
+                    "conclusion": rule["conclusion"]
+                })
 
     return proven
 
