@@ -19,6 +19,7 @@ def recommend(answers:dict):
     return ranked, ineligible
 
 def check_course(student, course, all_rules):
+    
     # facts from students data
     facts = build_initial_facts(student, course)
 
