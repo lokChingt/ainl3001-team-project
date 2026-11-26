@@ -37,7 +37,7 @@ def build_initial_facts(known_facts, course):
 def forward_chaining(known_facts, rules):
     inferred_facts = set(known_facts)
     triggered_rules = []
-    triggered_rule_idx = set()
+    triggered_rule_ids = set()
     changed = True
 
 
@@ -53,8 +53,8 @@ def forward_chaining(known_facts, rules):
             if all(condition in inferred_facts for condition in conditions):
 
                 # prevent duplicate rule triggered
-                if rule_id not in triggered_rule_idx:
-                    triggered_rule_idx.add(rule_id)
+                if rule_id not in triggered_rule_ids:
+                    triggered_rule_ids.add(rule_id)
 
                     triggered_rules.append({
                         "rule_id": rule_id,
@@ -202,10 +202,7 @@ def evaluate_courses(known_facts, courses, all_rules):
             "reasons": reasons
         })
 
-    # rank courses
-    ranked_courses = rank_courses(results)
-
-    return ranked_courses
+    return rank_courses(results)
 
 
 
