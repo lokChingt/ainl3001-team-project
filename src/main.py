@@ -3,6 +3,7 @@ from student_input import parse_typed_student
 from knowledge_base import load_courses, load_rules, get_course_rules
 from reasoning_engine import evaluate_courses, build_initial_facts, calculate_score
 from backward_chaining import backward_chaining, get_requirements, get_soft_preferences, find_course
+from output import print_report, print_check
 
 # loop through list only write questions once
 FIELDS= [("name", "Name"), ("credits", "Credits Completed"), ("passed_subjects", "Passed subjects (comma separated)"), ("fav_subject", "Favourite subject"), ("career_goal", "Career goal")]
@@ -53,17 +54,7 @@ def show_recommendations(student, courses, rules):
     ranked, ineligible = evaluate_courses(student, courses, rules)
 
     header("Recommended Courses")
-    print(f"{'Rank':<6}{'Course':<22}{'Score':<7}Explanation")
-
-    for c in ranked:
-        print(f"{c['rank']:<6}{c['name']:<22}{c['score']:<7}{', '.join(c['reasons'])}")
-
-    if not ranked:
-        print("No eligible courses found")
-
-    header("Ineligible Courses")
-    for c in ineligible:
-        print(f"{c['name']:<22}{'; '.join(c['reasons'])}")
+    print_report(student, ranked, ineligible)
 
 def course_check(student, courses, rules):
     """option 2: backward chaining on one course the user picks"""
@@ -79,11 +70,9 @@ def course_check(student, courses, rules):
     eligible, score = check_course(student, course, rules)
     header(course["name"])
 
-    # print hard requirements and soft preferences using loop
-    print(f"Eligible: {'Yes' if eligible else 'No'}" + (f" (score: {score})" if eligible else "" ))
-    for title, lines in [("Requirements", get_requirements(student, course)), ("Soft preferences", get_soft_preferences(student, course))]:
-        print(f"\n{title}:")
-        print(*(f" - {line}"for line in lines), sep="\n")
+    print_check({"course": course["name"], "is_eligible": eligible, "score": score,
+                 "requirements": get_requirements(student, course),
+                 "preferences": get_soft_preferences(student, course)})
 
 
 def main():
