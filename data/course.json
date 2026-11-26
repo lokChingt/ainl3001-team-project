@@ -1,6 +1,6 @@
 {
     "courses":[
-        {"_id":"C1","name": "Engineering", "hard":{"min_credits": 50, "requires": []}, "soft": {"fav_subject": "maths", "career_goal": "software"}},
+        {"_id":"C1","name": "Engineering", "hard":{"min_credits": 50, "requires": []}, "soft": {"fav_subject": "math", "career_goal": "software"}},
         {"_id":"C2","name": "Computer Science", "hard": {"min_credits": 40, "requires": ["math"]}, "soft": {"fav_subject": "computing", "career_goal": "software"}},
         {"_id":"C3","name": "Physics", "hard": {"min_credits": 45, "requires":["math"]}, "soft": {"fav_subject": "science", "career_goal": "research"}},
         {"_id":"C4","name": "Geography", "hard": {"min_credits": 35, "requires": []}, "soft": {"fav_subject": "geography", "career_goal": "environment"}},

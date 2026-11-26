@@ -5,6 +5,12 @@ from knowledge_base import FACT_NAMES
 
 REQUIRED_KEYS = {"name", "credits", "passed_subjects", "fav_subject", "career_goal"}
 DEFAULT_PATH = Path(__file__).parent.parent / "data" / "students.json"
+ALIASES = {"maths": "math", "mathematics": "math"}
+
+def normalise(subject: str) -> str:
+    """lowercase, trim and map aliases to match math"""
+    s = subject.strip().lower()
+    return ALIASES.get(s, s)
 
 def parse_credits(text: str) -> int:
     """Turn typed ' 30 ' into 30 (text into num) + Raise eror if not cele number."""
@@ -18,7 +24,7 @@ def parse_subjects(text: str) -> list[str]:
     result = []
     for s in text.split(","):
         if s.strip():
-            result.append(s.strip().lower())
+            result.append(normalise(s))
     return result
 
 def validate_student(raw: dict) -> dict:
@@ -53,7 +59,7 @@ def validate_student(raw: dict) -> dict:
     subjects = [s.strip().lower() for s in subjects]
     unknown = set(subjects) - FACT_NAMES
     if unknown:
-        raise ValueError(f"{name}: passed_subjects has unknown subject(s) {sorted(unknown)}")
+        raise ValueError(f"{name}: passed_subjects has unknown subject(s) {sorted(unknown)}. Valid: {sorted(FACT_NAMES)}")
 
     prefs = {}
     for key in ["fav_subject", "career_goal"]:
@@ -76,7 +82,7 @@ def parse_typed_student(answers: dict) -> dict:
         "name": answers.get("name", ""),
         "credits": parse_credits(answers.get("credits", "")),
         "passed_subjects": parse_subjects(answers.get("passed_subjects", "")),
-        "fav_subject": answers.get("fav_subject", ""),
+        "fav_subject": normalise(answers.get("fav_subject", "")),
         "career_goal": answers.get("career_goal", ""),
     }
     return validate_student(student)

@@ -5,7 +5,7 @@ from reasoning_engine import evaluate_courses, build_initial_facts, calculate_sc
 from backward_chaining import backward_chaining, get_requirements, get_soft_preferences, find_course
 
 # loop through list only write questions once
-FIELDS= [("name", "Name"), ("credits", "Credits Completed"), ("passed_subjects", "Passed subjects (comma separated)"), ("fav_subject", "Favourite subject"), ("career_goal", "Career goal")]
+FIELDS= [("name", "Name"), ("credits", "Credits Completed"), ("passed_subjects", "Passed subjects comma separated (math, science)"), ("fav_subject", "Favourite subject (math, computing, science, geography, languages, business, psychology)"), ("career_goal", "Career goal (software, research, environment, writing, health, business, law)")]
 
 def header(title):
     """print a title inside a banner, used to separate sections of output"""
@@ -116,6 +116,10 @@ def run_tests():
     clean, _ = recommend({"name": "John", "credits": "67", "passed_subjects": "math, science",
                           "fav_subject": "computing", "career_goal": "software"})
     print("OK, same as clean:", [c["name"] for c in ranked] == [c["name"] for c in clean])
+
+    alias, _ = recommend({"name": "John", "credits": "67", "passed_subjects": "maths",
+                          "fav_subject": "maths", "career_goal": "software"})
+    print("OK, maths treated as math:", [c["name"] for c in alias] == [c["name"] for c in ranked])
 
     try:
         recommend({"name": "John", "credits": "eighty", "passed_subjects": "math",
