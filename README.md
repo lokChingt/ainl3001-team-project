@@ -81,7 +81,7 @@ ainl3001-team-project
 ```
 
 ## Pipeline
-``` Mermaid
+```mermaid
 
 flowchart TD
     A["Student Input"] --> B["Input Validation"]
