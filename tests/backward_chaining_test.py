@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT/ "src"))
 
-from main import backward_chaining
+from backward_chaining import backward_chaining
 
 def rule(rule_id, conditions, conclusion):
     return{"id": rule_id, "conditions": conditions, "conclusion": conclusion}
