@@ -65,9 +65,15 @@ ainl3001-team-project
 |   |-- reasoning_engine.py [forward chaining, scoring and ranking]
 |   |-- backward_chaining.py [goal-driven check one course and outputs unment requirements]
 |   |-- main.py [menus, input validation and output]
+|   |-- explanation.py [adds reason to decisions made]
+|   |-- student_input.py [validate student inputs]
+|   |-- output.py [merges explanation and recommnedations]
 
 |-- tests/
 |   |-- loader_test.py [unit tests for load_courses function]
+|   |-- engine_test.py [unit tests for reasoning_engine.py]
+|   |-- end_to_end_test.py [unit tests for student_input.py]
+|   |-- backward_chaining_test.py [unit tests for backward_chaining.py]
 
 |-- proposal/
 |   |-- proposal.md
@@ -116,6 +122,6 @@ flowchart TD
 ## Contributions
 **Lok Ching Tam:** all rules loader, specific course rule loader, forward-chaining, scoring, ranking, reasons, engine tests
 
-**Amy Webb:** course.json + loader, KB tests, README sections, AIMA formulation, backward-chaing
+**Amy Webb:** course.json + loader, KB tests, README sections, AIMA formulation, backward-chaing, main.py
 
 **Karla Satrapová:** input validation, explanation, output layer, sample students data, end-to-end tests
