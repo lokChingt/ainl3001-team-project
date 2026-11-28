@@ -20,8 +20,9 @@ def make_file(tmp_path, courses):
 # valid course
 def good_course():
     return{
+        "_id": "test_course",
         "name": "Test Course",
-        "hard": {"min_credits": 40, "requires": ["passed_math"]},
+        "hard": {"min_credits": 40, "requires": ["math"]},
         "soft": {"fav_subject": "Computing", "career_goal": "Software"}
     }
 
@@ -40,7 +41,14 @@ def test_names_unique():
 def test_known_values():
     by_name = {c["name"]: c for c in load_courses(REAL_FILE)}
     assert by_name["Engineering"]["hard"]["min_credits"] == 50
-    assert by_name["Computer Science"]["hard"]["requires"] == ["passed_math"]
+    assert by_name["Computer Science"]["hard"]["requires"] == ["math"]
+
+# check course has an _id
+def test_missing_id(tmp_path):
+    course = good_course()
+    del course["_id"]
+    with pytest.raises(ValueError):
+        load_courses(make_file(tmp_path, [course]))
 
 
 #=============== test loading and normalization =====================
